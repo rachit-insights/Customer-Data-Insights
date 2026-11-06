@@ -1,51 +1,38 @@
 # Customer Data Insights
 
-An analysis of customer shopping behaviour using Python, MySQL 8 and Power BI. The project cleans the data, loads it into MySQL and answers ten business questions about spending, discounts, subscriptions and customer segments.
+A customer shopping analysis project using Python, MySQL and Power BI. I used Python to clean the data, SQL to explore shopping patterns, and Power BI to view the results.
 
-## Results
+## Dataset
 
-The dataset contains **3,900 customers** and **$233,081** in purchases, with an average purchase of **$59.76**. Cleaning fills 37 missing review ratings using the median for each product category. Age groups use dataset quartiles, rather than fixed age bands.
+The dataset has 3,900 customer records, including age, gender, products purchased, purchase amounts, ratings, discounts and subscription status.
 
-## Run locally
+## Data cleaning
 
-You need Windows, Python 3.12 and a running MySQL 8 server.
+- Filled 37 missing review ratings using the median rating for each category.
+- Renamed columns for use in SQL.
+- Grouped customers by age and added purchase frequency in days.
+- Removed the promo code column because it matched the discount column.
+
+## Analysis
+
+The SQL queries explore spending by gender and age group, popular products, discounts, shipping preferences and subscriptions.
+
+Total purchases in the dataset add up to **$233,081**, with an average purchase of **$59.76**.
+
+## Run the project
+
+Requirements: Python 3.12, MySQL 8 and Power BI Desktop.
 
 ```powershell
 python -m venv .venv
 .venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-1. Double-click `CONNECT_MYSQL.cmd`. Enter the MySQL host, port, username and password, then click **Connect and load project**. The account needs permission to create the `customer_behavior` database and its `customer` table on the first run.
-2. Open `OPEN_NOTEBOOK.cmd` to work through the notebook.
-3. Use `RUN_ANALYSIS.cmd` to rerun the import and SQL analysis. The cleaned data, ten query results and verification summary are written to `results/`.
+1. Run `CONNECT_MYSQL.cmd` and enter your local MySQL details.
+2. Run `OPEN_NOTEBOOK.cmd` to open the notebook.
+3. Open `customer_behavior_sql_queries.sql` in MySQL Workbench to explore the data. `RUN_ANALYSIS.cmd` also saves the query results in the `results` folder.
+4. Open `customer_behavior_dashboard.pbix` in Power BI Desktop. To use your local database, update the existing customer query using `powerbi_mysql_source.m` and enter your MySQL login. The included dashboard still uses its original imported data until you update the connection.
 
-The Windows setup encrypts the password for the current user and stores it outside the repository, under `%LOCALAPPDATA%\CustomerSalesInsights`. Host and port are saved locally in `mysql_config.json`. Neither file belongs in GitHub.
+## Reference
 
-Existing customer tables are preserved. The importer reuses a matching table and stops if its contents differ from the source dataset.
-
-## SQL analysis
-
-Open `customer_behavior_sql_queries.sql` in MySQL Workbench after loading the data. It covers revenue by gender and age group, discounted purchases, product ratings, shipping, subscriptions, customer loyalty and popular products in each category.
-
-## Power BI
-
-`customer_behavior_dashboard.pbix` is the original reference dashboard. Its imported model is included, but its source has not been migrated or refresh-tested against this MySQL setup.
-
-To connect it locally, open **Transform data**, select the existing customer query and replace its source in **Advanced Editor** with `powerbi_mysql_source.m`. Keep the existing query name so the visuals retain their bindings. Adjust the host and port if needed, authenticate locally, then **Close & Apply** and refresh. Power BI may require its supported MySQL Connector/NET provider.
-
-## Files
-
-- `Customer_Shopping_Behavior_Analysis.ipynb`: data exploration and cleaning
-- `pipeline.py`: cleaning, MySQL import and analysis export
-- `setup_gui.py`: local connection setup
-- `customer_shopping_behavior.csv`: source dataset
-- `customer_behavior_sql_queries.sql`: ten MySQL analysis queries
-- `customer_behavior_dashboard.pbix`: reference Power BI report
-
-## Validation
-
-On Windows with Python 3.12 and MySQL 8, all 3,900 imported records matched the cleaned CSV and all ten SQL queries executed successfully. The notebook ran without error. The Power BI refresh remains unverified.
-
-## Attribution
-
-Adapted from [Amlan Mohanty's customer behaviour analysis](https://github.com/amlanmohanty1/customer-trends-data-analysis-SQL-Python-PowerBI). The dataset, notebook workflow and reference dashboard come from that project. This version adds a Windows setup and MySQL-specific workflow. The original MIT license is retained in `LICENSE`.
+Based on [Amlan Mohanty's customer shopping analysis](https://github.com/amlanmohanty1/customer-trends-data-analysis-SQL-Python-PowerBI), adapted to run with MySQL on my PC.
